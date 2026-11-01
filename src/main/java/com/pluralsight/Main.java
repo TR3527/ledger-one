@@ -1,15 +1,29 @@
 package com.pluralsight;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner read = new Scanner(System.in);
+   Scanner read = new Scanner(System.in);
 
-        System.out.print("Enter your first name: ");
-        String nameInput = read.nextLine();
+        //Array declaration (do not forget import)
+        ArrayList<Transaction> transactions = new ArrayList<>();
 
 
-        read.close();
+
+
+
+
+
+
+
+
+//        read.close();
     }
 }
