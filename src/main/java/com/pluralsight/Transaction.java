@@ -71,13 +71,17 @@ public class Transaction {
     }
 
 
+    DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+
     @Override
 
     //example format: "%-8s %-32s $%8.2f   %s"
 
     public String toString() {
-        // Locale.US: always a dot as decimal separator, also on a Dutch computer
-        return String.format(Locale.US,"%s %s %s %s %.2f", transactionDate, transactionTime,
+        //ensures proper time format (no nanoseconds)
+
+        // Locale.US: always a dot as decimal separator
+        return String.format(Locale.US,"%s %s %s %s %.2f", transactionDate, transactionTime.format(timeFormat),
                 transactionDescription, transactionVendor,transactionAmount);
     }
 
