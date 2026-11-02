@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class Transaction {
 
@@ -13,6 +14,7 @@ public class Transaction {
     private String transactionDescription;
     private String transactionVendor;
     private Double transactionAmount;
+
 
 
     public Transaction(LocalDate transactionDate, LocalTime transactionTime, String transactionDescription,
@@ -68,6 +70,16 @@ public class Transaction {
         this.transactionAmount = transactionAmount;
     }
 
+
+    @Override
+
+    //example format: "%-8s %-32s $%8.2f   %s"
+
+    public String toString() {
+        // Locale.US: always a dot as decimal separator, also on a Dutch computer
+        return String.format(Locale.US,"%s %s %s %s %.2f", transactionDate, transactionTime,
+                transactionDescription, transactionVendor,transactionAmount);
+    }
 
 
 }
