@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -56,13 +57,25 @@ public class Main {
             System.out.println("4 - Exit");
 
 
-            System.out.print("Enter your choice: ");
-            int userSelection = read.nextInt();
+            System.out.println(" ");
+            int userSelection = 0;
 
+            //handles invalid inputs (example: "ABC" instead of int
+            try{
+
+              System.out.print("Enter your choice: ");
+              userSelection = read.nextInt();
+
+          }catch (InputMismatchException e){
+              read.nextLine();
+              System.out.println("Invalid input! Enter 1,2,3 or 4.");
+
+          }
             //read.nextLine(); if int before str
 
-
             //OPTION 1 : DEPOSIT
+
+            //why does IF work better than switch statements?
             if (userSelection == 1){
 
                 //retrieves current date and time
@@ -80,19 +93,22 @@ public class Main {
                 System.out.print("Enter deposit amount: ");
                 double depositAmount = read.nextDouble();
 
-                System.out.println("Deposit completed!");
-
                 System.out.println(" ");
+
+                //initialization of new object using Transaction class (blueprint), so it can be added to arraylist
+                transactions.add(new Transaction(depositDate, depositTime,depositDescription
+                ,depositVendor,depositAmount));
+
+                System.out.println("Deposit completed!");
 
                 System.out.println("Date: " + depositDate);
                 System.out.println("Time: " + depositTime.format(timeFormat));
                 System.out.println("Description: " + depositDescription);
                 System.out.println("Vendor: " + depositVendor);
-                System.out.println("Amount: $" + depositAmount);
+                System.out.println("Deposit amount: $" + depositAmount);
 
-                transactions.add();
-
-
+                //TEST output
+               // System.out.println(transactions);
 
             } // closes for 1
 
@@ -104,17 +120,106 @@ public class Main {
                 LocalDate paymentDate = LocalDate.now();
                 LocalTime paymentTime = LocalTime.now();
 
+                read.nextLine(); //gets rid of leftover space
 
+                System.out.print("Enter payment description: ");
+                String paymentDescription = read.nextLine();
+
+                System.out.print("Enter payment vendor: ");
+                String paymentVendor = read.nextLine();
+
+                System.out.print("Enter payment amount: ");
+                double paymentAmount = read.nextDouble() * -1;
+
+                transactions.add(new Transaction(paymentDate,paymentTime,
+                        paymentDescription,paymentVendor,paymentAmount));
+
+                System.out.println("Payment processed!");
+
+                System.out.println(paymentDate);
+                System.out.println(paymentTime.format(timeFormat));
+                System.out.println("Description: " + paymentDescription);
+                System.out.println("Vendor: " + paymentVendor);
+                System.out.println("Payment amount: " + paymentAmount);
+
+                //System.out.println(transactions);
 
 
             }//closes for 2
 
 
-            //OPTION 3: VIEW LEDGER
-            if (userSelection == 3){
+            //OPTION 3: VIEW LEDGER //SUBMENU :1(ALL), 2(DEPOSITS), 3(PAYMENTS),4(RETURN HOME)
+
+            int userChoiceSubmenu = 1;
+
+            while(userChoiceSubmenu > 0 && userChoiceSubmenu <4){
+
+               if (userSelection == 3){
+
+                   System.out.println("===LEDGER ONE===");
+                   System.out.println(" ");
+                   System.out.println("Options:");
+                   System.out.println("1.All transactions");
+                   System.out.println("2.Deposits");
+                   System.out.println("3.Payments");
+                   System.out.println("4. Return to main menu");
+                   System.out.println(" ");
 
 
-            }//closes for 3
+
+                   try{
+
+                       System.out.print("Enter your choice: ");
+                       userChoiceSubmenu = read.nextInt();
+
+                   }
+                   catch (InputMismatchException e2){
+                       read.nextLine();
+                       System.out.println("Invalid input! Enter 1,2,3 or 4.");
+                   }
+                   if (userChoiceSubmenu == 1){
+
+                       System.out.println("All Transactions:");
+
+                       //used for each to iterate over each element of an array list
+                       //for each: best for reading data
+                       //for loop: use when index is needed or for list structure changes
+                       for(Transaction transaction: transactions){
+
+                           System.out.println(transaction);
+
+
+                       }
+                   }
+
+                   if (userChoiceSubmenu == 2){
+
+                       System.out.println("Deposits:");
+                       for (Transaction deposits: transactions){
+
+                           if(deposits.getTransactionAmount() > 0){
+                               System.out.println(deposits);
+                           }
+                       }
+
+                   }
+
+                   if(userChoiceSubmenu == 3){
+
+                       System.out.println("Payments:");
+                       for(Transaction payments : transactions){
+
+                           if(payments.getTransactionAmount()<0){
+                               System.out.println(payments);
+                           }
+                       }
+
+
+                   }
+
+               }//closes for 3
+           }
+
 
 
             //OPTION 4: EXIT

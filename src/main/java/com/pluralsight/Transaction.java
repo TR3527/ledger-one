@@ -71,8 +71,11 @@ public class Transaction {
     }
 
 
+    //gets rid of nanoseconds
     DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
 
+
+    //override + toString method ensures output comes out correctly.
     @Override
 
     //example format: "%-8s %-32s $%8.2f   %s"
