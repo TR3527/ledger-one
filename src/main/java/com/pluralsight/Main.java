@@ -150,11 +150,14 @@ public class Main {
 
             //OPTION 3: VIEW LEDGER //SUBMENU :1(ALL), 2(DEPOSITS), 3(PAYMENTS),4(RETURN HOME)
 
+            //make userChoiceSubmenu accessible all throughout program
             int userChoiceSubmenu = 1;
 
-            while(userChoiceSubmenu > 0 && userChoiceSubmenu <4){
-
                if (userSelection == 3){
+
+                  //<4 , so 4 exits while loop when chosen
+                   while(userChoiceSubmenu != 4){
+
 
                    System.out.println("===LEDGER ONE===");
                    System.out.println(" ");
@@ -165,8 +168,7 @@ public class Main {
                    System.out.println("4. Return to main menu");
                    System.out.println(" ");
 
-
-
+                   //handles invalid inputs : "abc"
                    try{
 
                        System.out.print("Enter your choice: ");
@@ -176,7 +178,21 @@ public class Main {
                    catch (InputMismatchException e2){
                        read.nextLine();
                        System.out.println("Invalid input! Enter 1,2,3 or 4.");
+
+                       //setting to 0
+                       userChoiceSubmenu =0;
+
+                       //skips remaining code,starts next iteration. //break : stops loop completely
+                       continue;
                    }
+
+                   //handles invalid numbers
+                   if(userChoiceSubmenu <= 0 || userChoiceSubmenu >4 ){
+
+                           System.out.println("Invalid input! Enter numbers 1,2,3 or 4.");
+
+                   }//closes for invalid input
+
                    if (userChoiceSubmenu == 1){
 
                        System.out.println("All Transactions:");
@@ -192,12 +208,12 @@ public class Main {
                        }
                    }
 
-                   if (userChoiceSubmenu == 2){
+                   if (userChoiceSubmenu == 2) {
 
                        System.out.println("Deposits:");
-                       for (Transaction deposits: transactions){
+                       for (Transaction deposits : transactions) {
 
-                           if(deposits.getTransactionAmount() > 0){
+                           if (deposits.getTransactionAmount() > 0) {
                                System.out.println(deposits);
                            }
                        }
@@ -214,11 +230,10 @@ public class Main {
                            }
                        }
 
-
                    }
+               }
 
-               }//closes for 3
-           }
+           }//closes for 3
 
 
 
