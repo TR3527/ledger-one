@@ -1,9 +1,6 @@
 package com.pluralsight;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
@@ -24,13 +21,21 @@ public class Main {
         DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
 
         LocalTime timeToday = LocalTime.now();
-        LocalDate dateToday = LocalDate.now();
+        LocalDate dateToday = LocalDate.of(2026,1,2);
         Month currentMonth = dateToday.getMonth();
         int currentYear = dateToday.getYear();
 
         //object creation (used for testing purposes)
 //        Transaction transaction = new Transaction(dateToday, timeToday,"transactionDescription",
 //                 "transactionVendor", 100.00);
+
+        Transaction transaction = new Transaction(LocalDate.of(2025,12,1),
+                timeToday,"Invoice", "Juan", 100.00);
+        transactions.add(transaction);
+
+        Transaction transaction2 = new Transaction(LocalDate.of(2026,1,1),
+                timeToday,"Invoice", "John", 200.00);
+        transactions.add(transaction2);
 
 
         // transaction.getTransactionDate().getMonth(); //extracts month
@@ -58,7 +63,7 @@ public class Main {
         boolean continueRunning = true;
 
         //loop runs until condition is false
-        while (continueRunning == true) {
+        while (continueRunning) {
 
             System.out.println("Welcome to Ledger One!");
             System.out.println(" ");
@@ -92,6 +97,8 @@ public class Main {
 
                 //retrieves current date and time
                 LocalDate depositDate = LocalDate.now();
+
+
                 LocalTime depositTime = LocalTime.now();
 
                 read.nextLine(); //gets rid of leftover space
@@ -171,7 +178,7 @@ public class Main {
                 while (userChoiceSubmenu != 5) {
 
 
-                    System.out.println("===LEDGER ONE===");
+                    System.out.println("===LEDGER VIEW===");
                     System.out.println(" ");
                     System.out.println("Options:");
                     System.out.println("1.All transactions");
@@ -273,26 +280,26 @@ public class Main {
                             try {
 
                                 System.out.print("Enter your choice: ");
-                                userChoiceSubmenu = read.nextInt();
+                                reportSubmenuChoice = read.nextInt();
 
                             } catch (InputMismatchException e2) {
                                 read.nextLine();
                                 System.out.println("Invalid input! Enter 1,2,3,4, 5 or 6.");
 
-                                userChoiceSubmenu = 0;
+                                reportSubmenuChoice = 0;
 
                                 //skips remaining code,starts next iteration. //break : stops loop completely
                                 continue;
                             }
 
-                            if (userChoiceSubmenu <= 0 || userChoiceSubmenu > 6) {
+                            if (reportSubmenuChoice <= 0 || reportSubmenuChoice > 6) {
 
                                 System.out.println("Invalid input! Enter numbers 1,2,3,4, 5 or 6.");
 
                             }//closes for invalid input
 
 
-                            if (userChoiceSubmenu == 1) {
+                            if (reportSubmenuChoice == 1) {
 
                                 for (Transaction monthToDate : transactions) {
 
@@ -314,40 +321,72 @@ public class Main {
                                     }
                                 }//closes for loop
                             }
+
+
+                            if (reportSubmenuChoice == 2) {
+
+                                Year currentYear2 = Year.now();
+                                Year previousYear = Year.of(currentYear2.getValue());
+                                Month previousMonth = currentMonth.minus(1);
+
+                                if (currentMonth == Month.JANUARY) {
+
+                                    previousYear = currentYear2.minusYears(1);
+
+                                }
+                                for (Transaction previousMonthTransactions : transactions) {
+
+                                    //checks if transaction belongs to previous month
+                                    if (previousMonthTransactions.getTransactionDate().getMonth().equals(previousMonth)) {
+
+                                        //transaction year == previous year?
+                                        if (previousMonthTransactions.getTransactionDate().getYear() == previousYear.getValue()) {
+
+                                            System.out.println("Previous Month Transactions: " + previousMonthTransactions);
+
+                                        }
+                                    }
+
+                                }//view reports option
+
+                            }//closing for option 2
+
+
                         } //closes for option 4
 
                     }
 
                 }
 
+                //OPTION 5: EXIT
+                if (userSelection == 4) {
+                    continueRunning = false;
+                    System.out.println("Thank You For Visiting!");
+                }//closes for 4
+
+
+                //account for negative numbers, 0 and 5+
+                if (userSelection <= 0 || userSelection > 4) {
+
+                    System.out.println("Invalid input!");
+
+                }//closes for invalid input
+
             }//while loop for report submenu
 
-            //OPTION 5: EXIT
-            if (userSelection == 5) {
-                continueRunning = false;
-                System.out.println("Thank You For Visiting!");
-            }//closes for 4
-
-
-            //account for negative numbers, 0 and 5+
-            if (userSelection <= 0 || userSelection >= 5) {
-
-                System.out.println("Invalid input!");
-
-            }//closes for invalid input
 
         }//closes for 3(View Ledger option)
 
 
-
-
-    }//While loop ending
+    }
+}
+    //While loop ending
 
 
 //        read.close();
 
 
-}
+
 
 
 
