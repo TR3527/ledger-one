@@ -3,24 +3,37 @@ package com.pluralsight;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import static java.util.function.Predicate.isEqual;
+
 public class Main {
     public static void main(String[] args) {
-   Scanner read = new Scanner(System.in);
+        Scanner read = new Scanner(System.in);
 
         //Array declaration (do not forget import)
         ArrayList<Transaction> transactions = new ArrayList<>();
         //.add to make additions to array (.remove)
 
 
-
         DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
 
+        LocalTime timeToday = LocalTime.now();
+        LocalDate dateToday = LocalDate.now();
+        Month currentMonth = dateToday.getMonth();
+        int currentYear = dateToday.getYear();
+
+        //object creation (used for testing purposes)
+//        Transaction transaction = new Transaction(dateToday, timeToday,"transactionDescription",
+//                 "transactionVendor", 100.00);
+
+
+        // transaction.getTransactionDate().getMonth(); //extracts month
 
 //        // (Transaction class)LocalDate.parse(); - convert date to string to object
 //        transactions.add(new Transaction(today,currentTime,"Groceries","Walmart",100.50));
@@ -42,11 +55,10 @@ public class Main {
         //CRL + SPACE: shortcut
 
 
-
         boolean continueRunning = true;
 
         //loop runs until condition is false
-        while(continueRunning == true){
+        while (continueRunning == true) {
 
             System.out.println("Welcome to Ledger One!");
             System.out.println(" ");
@@ -61,22 +73,22 @@ public class Main {
             int userSelection = 0;
 
             //handles invalid inputs (example: "ABC" instead of int
-            try{
+            try {
 
-              System.out.print("Enter your choice: ");
-              userSelection = read.nextInt();
+                System.out.print("Enter your choice: ");
+                userSelection = read.nextInt();
 
-          }catch (InputMismatchException e){
-              read.nextLine();
-              System.out.println("Invalid input! Enter 1,2,3 or 4.");
+            } catch (InputMismatchException e) {
+                read.nextLine();
+                System.out.println("Invalid input! Enter 1,2,3 or 4.");
 
-          }
+            }
             //read.nextLine(); if int before str
 
             //OPTION 1 : DEPOSIT
 
             //why does IF work better than switch statements?
-            if (userSelection == 1){
+            if (userSelection == 1) {
 
                 //retrieves current date and time
                 LocalDate depositDate = LocalDate.now();
@@ -96,8 +108,8 @@ public class Main {
                 System.out.println(" ");
 
                 //initialization of new object using Transaction class (blueprint), so it can be added to arraylist
-                transactions.add(new Transaction(depositDate, depositTime,depositDescription
-                ,depositVendor,depositAmount));
+                transactions.add(new Transaction(depositDate, depositTime, depositDescription
+                        , depositVendor, depositAmount));
 
                 System.out.println("Deposit completed!");
 
@@ -108,13 +120,13 @@ public class Main {
                 System.out.println("Deposit amount: $" + depositAmount);
 
                 //TEST output
-               // System.out.println(transactions);
+                // System.out.println(transactions);
 
             } // closes for 1
 
 
             //OPTION 2: MAKE PAYMENT
-            if (userSelection == 2){
+            if (userSelection == 2) {
 
                 //retrieves current date and time
                 LocalDate paymentDate = LocalDate.now();
@@ -131,8 +143,8 @@ public class Main {
                 System.out.print("Enter payment amount: ");
                 double paymentAmount = read.nextDouble() * -1;
 
-                transactions.add(new Transaction(paymentDate,paymentTime,
-                        paymentDescription,paymentVendor,paymentAmount));
+                transactions.add(new Transaction(paymentDate, paymentTime,
+                        paymentDescription, paymentVendor, paymentAmount));
 
                 System.out.println("Payment processed!");
 
@@ -153,116 +165,189 @@ public class Main {
             //make userChoiceSubmenu accessible all throughout program
             int userChoiceSubmenu = 1;
 
-               if (userSelection == 3){
+            if (userSelection == 3) {
 
-                  //<4 , so 4 exits while loop when chosen
-                   while(userChoiceSubmenu != 4){
-
-
-                   System.out.println("===LEDGER ONE===");
-                   System.out.println(" ");
-                   System.out.println("Options:");
-                   System.out.println("1.All transactions");
-                   System.out.println("2.Deposits");
-                   System.out.println("3.Payments");
-                   System.out.println("4. Return to main menu");
-                   System.out.println(" ");
-
-                   //handles invalid inputs : "abc"
-                   try{
-
-                       System.out.print("Enter your choice: ");
-                       userChoiceSubmenu = read.nextInt();
-
-                   }
-                   catch (InputMismatchException e2){
-                       read.nextLine();
-                       System.out.println("Invalid input! Enter 1,2,3 or 4.");
-
-                       //setting to 0
-                       userChoiceSubmenu =0;
-
-                       //skips remaining code,starts next iteration. //break : stops loop completely
-                       continue;
-                   }
-
-                   //handles invalid numbers
-                   if(userChoiceSubmenu <= 0 || userChoiceSubmenu >4 ){
-
-                           System.out.println("Invalid input! Enter numbers 1,2,3 or 4.");
-
-                   }//closes for invalid input
-
-                   if (userChoiceSubmenu == 1){
-
-                       System.out.println("All Transactions:");
-
-                       //used for each to iterate over each element of an array list
-                       //for each: best for reading data
-                       //for loop: use when index is needed or for list structure changes
-                       for(Transaction transaction: transactions){
-
-                           System.out.println(transaction);
+                //<4 , so 4 exits while loop when chosen
+                while (userChoiceSubmenu != 5) {
 
 
-                       }
-                   }
+                    System.out.println("===LEDGER ONE===");
+                    System.out.println(" ");
+                    System.out.println("Options:");
+                    System.out.println("1.All transactions");
+                    System.out.println("2.Deposits");
+                    System.out.println("3.Payments");
+                    System.out.println("4.Reports");
+                    System.out.println("5. Return to main menu");
+                    System.out.println(" ");
 
-                   if (userChoiceSubmenu == 2) {
+                    //handles invalid inputs : "abc"
+                    try {
 
-                       System.out.println("Deposits:");
-                       for (Transaction deposits : transactions) {
+                        System.out.print("Enter your choice: ");
+                        userChoiceSubmenu = read.nextInt();
 
-                           if (deposits.getTransactionAmount() > 0) {
-                               System.out.println(deposits);
-                           }
-                       }
+                    } catch (InputMismatchException e2) {
+                        read.nextLine();
+                        System.out.println("Invalid input! Enter 1,2,3,4 or 5.");
 
-                   }
+                        //setting to 0
+                        userChoiceSubmenu = 0;
 
-                   if(userChoiceSubmenu == 3){
+                        //skips remaining code,starts next iteration. //break : stops loop completely
+                        continue;
+                    }
 
-                       System.out.println("Payments:");
-                       for(Transaction payments : transactions){
+                    //handles invalid numbers (0 and 5+)
+                    if (userChoiceSubmenu <= 0 || userChoiceSubmenu > 5) {
 
-                           if(payments.getTransactionAmount()<0){
-                               System.out.println(payments);
-                           }
-                       }
+                        System.out.println("Invalid input! Enter numbers 1,2,3,4 or 5.");
 
-                   }
-               }
-
-           }//closes for 3
+                    }//closes for invalid input
 
 
+                    if (userChoiceSubmenu == 1) {
 
-            //OPTION 4: EXIT
-            if ( userSelection == 4){
+                        System.out.println("All Transactions:");
+
+                        //used for each to iterate over each element of an array list
+                        //for each: best for reading data
+                        //for loop: use when index is needed or for list structure changes
+//                       for(Transaction transaction: transactions){
+//
+//                           System.out.println(transaction);
+//
+//
+//                       }
+
+                        //prints in reverse order, size()-1 refers to last index, get(i) prints current index
+                        for (int i = transactions.size() - 1; i >= 0; i--) {
+                            System.out.println(transactions.get(i));
+                        }
+                    }
+
+                    if (userChoiceSubmenu == 2) {
+
+                        System.out.println("Deposits:");
+                        //pre new order: for (Transaction deposits : transactions)
+
+                        for (int i = transactions.size() - 1; i >= 0; i--) {
+
+                            if (transactions.get(i).getTransactionAmount() > 0) {
+
+                                System.out.println(transactions.get(i));
+                            }
+
+
+                        }
+
+                    }
+
+                    if (userChoiceSubmenu == 3) {
+
+                        System.out.println("Payments:");
+                        // for(Transaction payments : transactions)
+                        for (int i = transactions.size() - 1; i >= 0; i--) {
+
+                            if (transactions.get(i).getTransactionAmount() < 0) {
+
+                                System.out.println(transactions.get(i));
+                            }
+                        }
+
+                    }
+                    int reportSubmenuChoice = 1;
+
+                    if (userChoiceSubmenu == 4) {
+
+                        while (reportSubmenuChoice != 6) {
+
+                            System.out.println("Pick report type: ");
+                            System.out.println("1.Month-to-Date");
+                            System.out.println("2.Previous Month");
+                            System.out.println("3.Year-to-Date:");
+                            System.out.println("4.Previous Year");
+                            System.out.println("5.Search by Vendor");
+                            System.out.println("6.Return to View Ledger Menu");
+
+                            try {
+
+                                System.out.print("Enter your choice: ");
+                                userChoiceSubmenu = read.nextInt();
+
+                            } catch (InputMismatchException e2) {
+                                read.nextLine();
+                                System.out.println("Invalid input! Enter 1,2,3,4, 5 or 6.");
+
+                                userChoiceSubmenu = 0;
+
+                                //skips remaining code,starts next iteration. //break : stops loop completely
+                                continue;
+                            }
+
+                            if (userChoiceSubmenu <= 0 || userChoiceSubmenu > 6) {
+
+                                System.out.println("Invalid input! Enter numbers 1,2,3,4, 5 or 6.");
+
+                            }//closes for invalid input
+
+
+                            if (userChoiceSubmenu == 1) {
+
+                                for (Transaction monthToDate : transactions) {
+
+                                    //year comparison //can also combine both comparisons using &&
+                                    if (monthToDate.getTransactionDate().getYear() == currentYear) {
+
+
+                                        //month comparison
+                                        if (monthToDate.getTransactionDate().getMonth().equals(currentMonth)) {
+
+
+                                            //checks if transaction was before today or equal to today
+                                            if (monthToDate.getTransactionDate().isBefore(dateToday) ||
+                                                    monthToDate.getTransactionDate().isEqual(dateToday)) {
+
+                                                System.out.println(monthToDate);
+                                            }
+                                        }
+                                    }
+                                }//closes for loop
+                            }
+                        } //closes for option 4
+
+                    }
+
+                }
+
+            }//while loop for report submenu
+
+            //OPTION 5: EXIT
+            if (userSelection == 5) {
                 continueRunning = false;
                 System.out.println("Thank You For Visiting!");
             }//closes for 4
 
 
             //account for negative numbers, 0 and 5+
-            if(userSelection <= 0 || userSelection >=5){
+            if (userSelection <= 0 || userSelection >= 5) {
 
                 System.out.println("Invalid input!");
 
             }//closes for invalid input
 
-
-            }//While loop ending
-
+        }//closes for 3(View Ledger option)
 
 
 
 
-
+    }//While loop ending
 
 
 //        read.close();
 
 
-    }
 }
+
+
+
