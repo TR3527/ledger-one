@@ -15,9 +15,12 @@ public class Main {
 
     public  static void appendToFile(Transaction newTransaction){
 
+        DateTimeFormatter fileTimeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+
         //formats like: 2023-04-15|11:15:00|Invoice 1001 paid|Joe|1500.00 //
         String transactionInfoConvert = newTransaction.getTransactionDate() + "|" +
-                                        newTransaction.getTransactionTime() + "|" +
+                                        newTransaction.getTransactionTime().format(fileTimeFormat) + "|" +
                                         newTransaction.getTransactionDescription() + "|" +
                                         newTransaction.getTransactionVendor() + "|" +
                                         newTransaction.getTransactionAmount();
@@ -72,8 +75,8 @@ public class Main {
                         newTransactionDescription,newTransactionVendor,newTransactionAmount);
                 transactions.add(transaction3);
 
-                System.out.println(transactionInformation[3]);
-                //System.out.println("The next line");
+                //test
+                //System.out.println(transactionInformation[3]);
             }
             // close the stream and release the resources
             bufReader.close();
