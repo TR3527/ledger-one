@@ -13,6 +13,7 @@ import java.util.Scanner;
 
 public class Main {
 
+    //method allows information to be stored permanently
     public  static void appendToFile(Transaction newTransaction){
 
         DateTimeFormatter fileTimeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -203,6 +204,8 @@ public class Main {
                 System.out.println("Description: " + depositDescription);
                 System.out.println("Vendor: " + depositVendor);
                 System.out.println("Deposit amount: $" + depositAmount);
+                System.out.println(" ");
+
 
                 //TEST output
                 // System.out.println(transactions);
@@ -227,6 +230,8 @@ public class Main {
 
                 System.out.print("Enter payment amount: ");
                 double paymentAmount = read.nextDouble() * -1;
+                System.out.println(" ");
+
 
                 Transaction paymentToFile = new Transaction(paymentDate, paymentTime,
                         paymentDescription, paymentVendor, paymentAmount);
@@ -243,6 +248,8 @@ public class Main {
                 System.out.println("Description: " + paymentDescription);
                 System.out.println("Vendor: " + paymentVendor);
                 System.out.println("Payment amount: " + paymentAmount);
+                System.out.println(" ");
+
 
                 //System.out.println(transactions);
 
@@ -261,6 +268,7 @@ public class Main {
                 while (userChoiceSubmenu != 5) {
 
 
+                    System.out.println(" ");
                     System.out.println("===LEDGER VIEW===");
                     System.out.println(" ");
                     System.out.println("Options:");
@@ -298,6 +306,8 @@ public class Main {
 
                     if (userChoiceSubmenu == 1) {
 
+                        System.out.println(" ");
+
                         System.out.println("All Transactions:");
 
                         //used for each to iterate over each element of an array list
@@ -318,6 +328,8 @@ public class Main {
 
                     if (userChoiceSubmenu == 2) {
 
+                        System.out.println(" ");
+
                         System.out.println("Deposits:");
                         //pre new order: for (Transaction deposits : transactions)
 
@@ -335,6 +347,8 @@ public class Main {
 
                     if (userChoiceSubmenu == 3) {
 
+                        System.out.println(" ");
+
                         System.out.println("Payments:");
                         // for(Transaction payments : transactions)
                         for (int i = transactions.size() - 1; i >= 0; i--) {
@@ -351,6 +365,9 @@ public class Main {
                     if (userChoiceSubmenu == 4) {
 
                         while (reportSubmenuChoice != 6) {
+
+                            System.out.println(" ");
+
 
                             System.out.println("Pick report type: ");
                             System.out.println("1.Month-to-Date");
@@ -384,6 +401,8 @@ public class Main {
 
                             if (reportSubmenuChoice == 1) {
 
+                                System.out.println(" ");
+
                                 System.out.println("Month-to-Date:");
 
                                 for (Transaction monthToDate : transactions) {
@@ -409,6 +428,8 @@ public class Main {
 
 
                             if (reportSubmenuChoice == 2) {
+
+                                System.out.println(" ");
 
                                 System.out.println("Previous Month:");
 
@@ -442,6 +463,8 @@ public class Main {
                             //year to date, fist day of current calendar year to present day
                             if(reportSubmenuChoice == 3){
 
+                                System.out.println(" ");
+
                                 System.out.println("Year-to-Date:");
 
                                 for (Transaction yearToDate : transactions){
@@ -461,6 +484,8 @@ public class Main {
 
                             if(reportSubmenuChoice==4){
 
+                                System.out.println(" ");
+
                                 System.out.println("Previous Year:");
                                 for(Transaction previousYear: transactions){
 
@@ -478,6 +503,7 @@ public class Main {
 
                                 read.nextLine();
 
+                                System.out.println(" ");
                                 System.out.println("Search by Vendor:");
                                 System.out.print("Enter Vendor: ");
                                 String vendorSearch = read.nextLine();
