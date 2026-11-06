@@ -75,7 +75,8 @@ public class Transaction {
     DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
 
 
-    //override + toString method =  correct output
+    //override + toString method =correct output (Overrides default toString() inherited from the java object class)
+    //Transaction class is extension of the java object class
     //prevents : com.pluralsight.Transaction@4eec7777
     @Override
 

@@ -48,7 +48,7 @@ public class Main {
         //.add to make additions to array (.remove)
 
 
-        //CSV START
+        //CSV reader START
 
         try {
             // create a FileReader object connected to the file
@@ -125,13 +125,6 @@ public class Main {
         //.get(index) + for loop + if statement to search for transactions
 
 
-//        for (int i = 0; i < transactions.size();i++){
-//            System.out.println(transactions.get(i));
-//        }
-
-        // OR: for (Transaction transaction : transactions) {
-        // System.out.println(transaction);
-        //  }
         //CRL + SPACE: shortcut
 
 
@@ -546,22 +539,13 @@ public class Main {
 
             }//closes for invalid input
 
-        }//while loop for report submenu
+        }//while loop
 
         read.close();
     }//closes for 3(View Ledger option)
 
 
 }
-
-
-
-
-
-    //While loop ending
-
-
-//        read.close();
 
 
 
