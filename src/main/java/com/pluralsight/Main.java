@@ -1,5 +1,9 @@
 package com.pluralsight;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
@@ -7,9 +11,31 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import static java.util.function.Predicate.isEqual;
-
 public class Main {
+
+    public  static void appendToFile(Transaction newTransaction){
+
+        //formats like: 2023-04-15|11:15:00|Invoice 1001 paid|Joe|1500.00
+        String transactionInfoConvert = newTransaction.getTransactionDate() + "|" +
+                                        newTransaction.getTransactionTime() + "|" +
+                                        newTransaction.getTransactionDescription() + "|" +
+                                        newTransaction.getTransactionVendor() + "|" +
+                                        newTransaction.getTransactionAmount();
+
+
+        //try-with closes resources when done using them (here it is FileWriter) //"true" allows for appending to occur
+        try (FileWriter writer = new FileWriter("transactions.csv", true)) {
+
+           //ensures they stack properly
+            writer.write(transactionInfoConvert + "\n");
+
+        } catch (IOException e) {
+            System.out.println("ERROR: An unexpected error occurred ");
+        }
+
+
+    }
+
     public static void main(String[] args) {
         Scanner read = new Scanner(System.in);
 
@@ -18,10 +44,53 @@ public class Main {
         //.add to make additions to array (.remove)
 
 
+        //CSV START
+
+        try {
+            // create a FileReader object connected to the file
+            FileReader fileReader = new FileReader("transactions.csv");
+
+            // create a BufferedReader to manage the input stream
+            BufferedReader bufReader = new BufferedReader(fileReader);
+
+            bufReader.readLine();
+
+            String input;
+
+            // read until there is no more data
+            while ((input = bufReader.readLine()) != null) {
+
+                String[] transactionInformation  = input.split("\\|");
+                LocalDate newTransactionDate = LocalDate.parse(transactionInformation[0]);
+                LocalTime newTransactionTime = LocalTime.parse(transactionInformation[1]);
+                String newTransactionDescription = transactionInformation[2];
+                String newTransactionVendor = transactionInformation[3];
+                double newTransactionAmount = Double.parseDouble(transactionInformation[4]);
+
+
+                Transaction transaction3 = new Transaction(newTransactionDate,newTransactionTime,
+                        newTransactionDescription,newTransactionVendor,newTransactionAmount);
+                transactions.add(transaction3);
+
+                System.out.println(transactionInformation[3]);
+                //System.out.println("The next line");
+            }
+            // close the stream and release the resources
+            bufReader.close();
+        }
+        catch (IOException e) {
+            // display stack trace if there was an error
+            e.printStackTrace();
+        }
+
+        //CSV END
+
+
+
         DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
 
         LocalTime timeToday = LocalTime.now();
-        LocalDate dateToday = LocalDate.of(2026,1,2);
+        LocalDate dateToday = LocalDate.now();
         Month currentMonth = dateToday.getMonth();
         int currentYear = dateToday.getYear();
 
@@ -29,17 +98,19 @@ public class Main {
 //        Transaction transaction = new Transaction(dateToday, timeToday,"transactionDescription",
 //                 "transactionVendor", 100.00);
 
-        Transaction transaction = new Transaction(LocalDate.of(2025,12,1),
-                timeToday,"Invoice", "Juan", 100.00);
-        transactions.add(transaction);
-
-        Transaction transaction2 = new Transaction(LocalDate.of(2026,1,1),
-                timeToday,"Invoice", "John", 200.00);
-        transactions.add(transaction2);
+//        //testing
+//        Transaction transaction = new Transaction(LocalDate.of(2025,12,1),
+//                timeToday,"Invoice", "Juan", 100.00);
+//        transactions.add(transaction);
+//
+//        Transaction transaction2 = new Transaction(LocalDate.of(2026,1,1),
+//                timeToday,"Invoice", "John", 200.00);
+//        transactions.add(transaction2);
 
 
         // transaction.getTransactionDate().getMonth(); //extracts month
 
+        //TESTING
 //        // (Transaction class)LocalDate.parse(); - convert date to string to object
 //        transactions.add(new Transaction(today,currentTime,"Groceries","Walmart",100.50));
 //        transactions.add(new Transaction(today,currentTime,"Gas","Flyers",50.00));
@@ -114,9 +185,13 @@ public class Main {
 
                 System.out.println(" ");
 
-                //initialization of new object using Transaction class (blueprint), so it can be added to arraylist
-                transactions.add(new Transaction(depositDate, depositTime, depositDescription
-                        , depositVendor, depositAmount));
+                Transaction depositToFile = new Transaction(depositDate, depositTime, depositDescription
+                        , depositVendor, depositAmount);
+
+                transactions.add(depositToFile);
+
+                appendToFile(depositToFile);
+
 
                 System.out.println("Deposit completed!");
 
@@ -150,8 +225,13 @@ public class Main {
                 System.out.print("Enter payment amount: ");
                 double paymentAmount = read.nextDouble() * -1;
 
-                transactions.add(new Transaction(paymentDate, paymentTime,
-                        paymentDescription, paymentVendor, paymentAmount));
+                Transaction paymentToFile = new Transaction(paymentDate, paymentTime,
+                        paymentDescription, paymentVendor, paymentAmount);
+
+                transactions.add(paymentToFile);
+
+                appendToFile(paymentToFile);
+
 
                 System.out.println("Payment processed!");
 
@@ -301,6 +381,8 @@ public class Main {
 
                             if (reportSubmenuChoice == 1) {
 
+                                System.out.println("Month-to-Date:");
+
                                 for (Transaction monthToDate : transactions) {
 
                                     //year comparison //can also combine both comparisons using &&
@@ -324,6 +406,8 @@ public class Main {
 
 
                             if (reportSubmenuChoice == 2) {
+
+                                System.out.println("Previous Month:");
 
                                 Year currentYear2 = Year.now();
                                 Year previousYear = Year.of(currentYear2.getValue());
@@ -352,34 +436,99 @@ public class Main {
                             }//closing for option 2
 
 
+                            //year to date, fist day of current calendar year to present day
+                            if(reportSubmenuChoice == 3){
+
+                                System.out.println("Year-to-Date:");
+
+                                for (Transaction yearToDate : transactions){
+
+                                    //compare transaction year to current year
+                                    if (yearToDate.getTransactionDate().getYear() == currentYear) {
+
+                                            //checks if transaction was before today or equal to today
+                                            if (yearToDate.getTransactionDate().isBefore(dateToday) ||
+                                                    yearToDate.getTransactionDate().isEqual(dateToday)) {
+
+                                                System.out.println(yearToDate);
+                                            }
+                                        }
+                                    }
+                                }//closes for loop
+
+                            if(reportSubmenuChoice==4){
+
+                                System.out.println("Previous Year:");
+                                for(Transaction previousYear: transactions){
+
+                                    if (previousYear.getTransactionDate().getYear() == currentYear-1){
+
+                                        System.out.println(previousYear);
+                                    }
+                                }
+
+                            }//report option 4 closing
+
+                            if(reportSubmenuChoice == 5){
+
+                                boolean matchFound = false;
+
+                                read.nextLine();
+
+                                System.out.println("Search by Vendor:");
+                                System.out.print("Enter Vendor: ");
+                                String vendorSearch = read.nextLine();
+                                //.getTransactionVendor
+
+                                for(Transaction vendorSearchOption : transactions){
+                                    if(vendorSearchOption.getTransactionVendor().equalsIgnoreCase(vendorSearch)){
+                                        System.out.println(vendorSearchOption);
+                                        matchFound = true;
+
+                                    }
+                                }//for loop ending
+
+                                if (!matchFound){
+                                    System.out.println("No match found");
+                                }
+
+
+
+                            }//report option 5 closing
+
+                                }
+                            }
+
+
                         } //closes for option 4
 
                     }
-
-                }
-
-                //OPTION 5: EXIT
-                if (userSelection == 4) {
-                    continueRunning = false;
-                    System.out.println("Thank You For Visiting!");
-                }//closes for 4
+            //OPTION 5: EXIT
+            if (userSelection == 4) {
+                continueRunning = false;
+                System.out.println("Thank You For Visiting!");
+            }//closes for 4
 
 
-                //account for negative numbers, 0 and 5+
-                if (userSelection <= 0 || userSelection > 4) {
+            //account for negative numbers, 0 and 5+
+            if (userSelection <= 0 || userSelection > 4) {
 
-                    System.out.println("Invalid input!");
+                System.out.println("Invalid input!");
 
-                }//closes for invalid input
+            }//closes for invalid input
 
-            }//while loop for report submenu
+        }//while loop for report submenu
+
+        read.close();
+    }//closes for 3(View Ledger option)
 
 
-        }//closes for 3(View Ledger option)
-
-
-    }
 }
+
+
+
+
+
     //While loop ending
 
 
