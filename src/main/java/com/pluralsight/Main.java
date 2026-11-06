@@ -15,7 +15,7 @@ public class Main {
 
     public  static void appendToFile(Transaction newTransaction){
 
-        //formats like: 2023-04-15|11:15:00|Invoice 1001 paid|Joe|1500.00
+        //formats like: 2023-04-15|11:15:00|Invoice 1001 paid|Joe|1500.00 //
         String transactionInfoConvert = newTransaction.getTransactionDate() + "|" +
                                         newTransaction.getTransactionTime() + "|" +
                                         newTransaction.getTransactionDescription() + "|" +
